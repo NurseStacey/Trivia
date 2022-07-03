@@ -36,15 +36,19 @@ class Add_Questions_dlg_class(tk.Frame):
         def add_question():
             
             the_question = self.nametowidget('question_text').get(
-                "1.0", tk.END).replace('\n', '~n')
+                "1.0", tk.END)
             
             audio_file=''
 
             audio_file_start = the_question.find('*')
             if not audio_file_start == -1:
-                the_question= the_question.partition('*')[0]
-                audio_file = the_question.partition('*')[2]
-
+                
+                audio_file = the_question.partition('*')[2].replace('\n','')
+                the_question = the_question.partition(
+                    '*')[0].replace('\n', '~n')
+            else:
+                the_question = the_question.replace('\n', '~n')
+                
             the_questions.append(one_question(
                 self.nametowidget('subject').get(),
                 int(self.nametowidget('difficulty').get()),

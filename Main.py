@@ -22,6 +22,10 @@ def load_questions(the_questions):
             the_question = one_line.partition(',')[0].replace('~n', '\n')
             audio_file = one_line.partition(',')[2].replace('\n','')
             
+            if not audio_file=='':
+                while(audio_file[len(audio_file)-1] == '\n'):
+                    audio_file = audio_file[0:len(audio_file)-1]
+
             while(the_question[len(the_question)-1] == '\n'):
                 the_question = the_question[0:len(the_question)-1]
 
@@ -41,10 +45,11 @@ game_scores = [0,0,0,0]
 root = tk.Tk()
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
+
 root.grid_rowconfigure(2, weight=1)
 root.grid_columnconfigure(2, weight=1)
 
-#root.attributes('-fullscreen', True)
+root.attributes('-fullscreen', True)
 
 
 Add_Questions_dlg_class(the_questions, root, name='add_questions_frame').grid(

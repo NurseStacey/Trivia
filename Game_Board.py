@@ -200,9 +200,11 @@ class Display_Question_dlg(tk.Frame):
             os.startfile(file)
 
         super().__init__(*args, **kwargs)
-        self.question_label_width = 35
-
+        self.base_question_label_width = 45
+        self.question_label_width = self.base_question_label_width
+        self.is_audio_question = False
         this_row = 1
+        self.done_with_this_question = False
 
         tk.Label(self, font=font_return(
             int(My_Font_Size*7.5)), width=3, name='clock', text=' ').grid(row=this_row, column=1)
@@ -225,44 +227,52 @@ class Display_Question_dlg(tk.Frame):
         self.which_question=0
 
     def button_pressed(self):
-        
+        self.done_with_this_question = False
+
         if self.nametowidget('the_button')['text'] in ['Check Answers','Stop']:
             self.winfo_toplevel().nametowidget('check_answer').set_scores(
                 self.these_questions[0].difficulty)
+            
+            self.done_with_this_question = True
             self.winfo_toplevel().nametowidget('check_answer').tkraise()
+
         else:
             self.nametowidget('the_button')['text'] = 'Stop'
             start_time = time.time()
-            total_time = 5
+            total_time = 90
             time_used = 0
 
             self.display_next_question()
-            self.nametowidget('clock')[
-                'text'] = str(total_time)
+            if not self.is_audio_question:
+                self.nametowidget('clock')[
+                    'text'] = str(total_time)
 
-            self.update()
+                self.update()
 
 
-        
-            while True:
-                if time.time()-start_time > total_time:
-                    self.nametowidget('the_button')[
-                        'text'] = 'Done'
-                    break
-                elif time.time()-start_time > (time_used+1):
-                    time_used += 1
-                    self.nametowidget('clock')[
-                        'text'] = str(total_time-time_used)
-                    self.update()
+            
+                while True:
+                    if self.done_with_this_question:
+                        break
+                    if time.time()-start_time > total_time:
+                        self.nametowidget('the_button')[
+                            'text'] = 'Done'
+                        break
+                    elif time.time()-start_time > (time_used+1):
+                        time_used += 1
+                        self.nametowidget('clock')[
+                            'text'] = str(total_time-time_used)
+                        self.update()
 
-            self.nametowidget('the_question')[
-                        'text'] = 'Time is up'
-            self.nametowidget('clock')[
-                'text'] = ''
-            self.nametowidget('the_button')['text']='Check Answers'
+                self.nametowidget('the_question')[
+                            'text'] = 'Time is up'
+                self.nametowidget('clock')[
+                    'text'] = ''
+                self.nametowidget('the_button')['text']='Check Answers'
 
     def set_questions(self, these_questions):
         self.these_questions = these_questions
+        self.which_question=0
 
     def start_these_questions(self):
 
@@ -277,11 +287,13 @@ class Display_Question_dlg(tk.Frame):
             'text'] = 'Question ' + str(self.which_question + 1)
         self.nametowidget('the_question')[
             'text'] = ''
+        self.update()
 
     def display_next_question(self):
 
         too_many_lines=True
-        characters_per_line = self.question_label_width
+        characters_per_line = self.base_question_label_width
+
         while too_many_lines:
             
             question_to_display = copy.deepcopy(
@@ -301,24 +313,31 @@ class Display_Question_dlg(tk.Frame):
                         length_this_row = characters_per_line
                     length_this_row = min(length_this_row, len(question_to_display))
 
-                    while not(question_to_display[length_this_row-1] in ['\n', ' ']):
+                    while not(question_to_display[length_this_row] in ['\n', ' ', '.']):
                         length_this_row -= 1
 
-                    final_text = final_text + question_to_display[:length_this_row-1] + '\n'
+                    final_text = final_text + question_to_display[:length_this_row] + '\n'
                     question_to_display=question_to_display[length_this_row:]
+                    if question_to_display[0] in [' ','\n']:
+                        question_to_display = question_to_display[1:len(question_to_display)]
                 
-            if final_text.count('\n') < 7:
+            if final_text.count('\n') < 10:
                 too_many_lines=False
             else:
                 characters_per_line += 8
                 self.nametowidget('the_question')[
                     'width'] = characters_per_line
-                font_size = int(My_Font_Size*5*(40/characters_per_line))
+                font_size = int(
+                    My_Font_Size*5*(self.base_question_label_width/characters_per_line))
                 self.nametowidget('the_question')[
                     'font'] = font_return(font_size)
 
         if not self.these_questions[self.which_question].audio == '':
             self.nametowidget('play')['state'] = 'normal'
+            self.is_audio_question = True
+        else:
+            self.is_audio_question = False
+
         self.nametowidget('the_question')[
             'text'] = final_text
 
@@ -328,10 +347,10 @@ class Display_Question_dlg(tk.Frame):
         if self.which_question==len(self.these_questions):
             self.winfo_toplevel().nametowidget('game_board_frame').nametowidget(self.these_questions[0].subject.lower())['state']='disabled'
             self.winfo_toplevel().nametowidget('game_board_frame').tkraise()
+        else:
 
-
-        self.prepare_for_next_question()
-        self.tkraise()
+            self.prepare_for_next_question()
+            self.tkraise()
 
 
 

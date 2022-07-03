@@ -12,5 +12,6 @@ class one_question():
     audio: str
     question: str
 
+
 def font_return(this_size):
     return tkfont.Font(family="Times", size=this_size)

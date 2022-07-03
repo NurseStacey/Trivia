@@ -1,5 +1,6 @@
 import tkinter as tk
 from Extra import *
+import sys
 
 class Home_dlg_class(tk.Frame):
 
@@ -18,24 +19,36 @@ class Home_dlg_class(tk.Frame):
             #self.winfo_toplevel().nametowidget('check_answer').Set_Team_Names(self.teams)
             self.winfo_toplevel().nametowidget('game_board_frame').tkraise()
 
-         
+        def admin():
+            pass
+            
+        def exit():
+            sys.exit()
+
         this_row = 0
         
-        tk.Label(self,  borderwidth=1, relief="solid", text='Life is Not Fair\n(so suck it up buttercup)', font=font_return(
+        tk.Label(self, borderwidth=1, relief="solid", text='Life is Not Fair\n(so suck it up buttercup)', font=font_return(
             My_Font_Size*8)).grid(row=this_row, column=1, columnspan=3)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
         self.grid_columnconfigure(3, weight=1)
         this_row += 1
 
-        tk.Button(self, text='Add Questions', command=add_questions, font = font_return(
+        tk.Button(self,  width=13,text='Add Questions', command=add_questions, font = font_return(
             My_Font_Size*3), name='add_questions').grid(row=this_row, column=1, pady=50)
         
-        tk.Button(self, text='Set Up', command=add_teams, font=font_return(
+        tk.Button(self,  width=13,text='Set Up', command=add_teams, font=font_return(
             My_Font_Size*3), name='add_teams').grid(row=this_row, column=2, pady=50)
      
-        tk.Button(self, text='Play Game', command=play_game, font=font_return(
+        tk.Button(self,  width=13,text='Play Game', command=play_game, font=font_return(
             My_Font_Size*3), name='play_game').grid(row=this_row, column=3, pady=50)
  
+        this_row += 1
+        tk.Button(self,  width=13,text='Admin', command=admin, font=font_return(
+            My_Font_Size*3), name='admin').grid(row=this_row, column=1, pady=50)
+
+        tk.Button(self,  width=13, text='Exit', command=exit, font=font_return(
+            My_Font_Size*3), name='exit').grid(row=this_row, column=3, pady=50)
+
     def set_teams(self, teams):
         self.teams = teams
