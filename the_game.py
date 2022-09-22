@@ -180,3 +180,7 @@ class The_Game_Class():
 
     def lost(self, which):
         self.teams[which].lost()
+
+    def adjust_score(self, adjustment, which):
+
+        self.teams[which].score += adjustment

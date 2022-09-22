@@ -60,6 +60,14 @@ class Game_Board_dlg_class(tk.Frame):
                 this_row+=1
                 this_column=0
 
+        this_row += 1
+        self.grid_rowconfigure(this_row,weight=1)
+        tk.Button(self, text='Cancel', font=font_return(20), command=self.cancel).grid(
+            row=this_row, column=1, padx=20, pady=20)
+
+    def cancel(self):
+        self.lower()
+
     def set_scores(self, scores):
         self.game_scores = scores
 
@@ -126,7 +134,32 @@ class Check_Answers_dlg(tk.Frame):
                     self.nametowidget('lose_score_'+str(index)
                                     )['text'] = str(self.The_Game.teams[index].lose_score)
 
+        def correct():
 
+            adjustments = []
+            for this_team in range(self.The_Game.number_teams):
+                self.The_Game.adjust_score(
+                    int(self.nametowidget('override' + str(this_team)).get()), this_team)
+                self.nametowidget(
+                    'score'+str(this_team))['text'] = str(self.The_Game.teams[this_team].score)
+                self.nametowidget('override' + str(this_team)).destroy()
+
+            self.nametowidget('override_lable').destroy()
+            self.nametowidget('correct_button').destroy()
+
+        def override():
+            nonlocal this_row
+
+            tk.Label(self, text='Score Override', name='override_lable', font=font_return(
+                My_Font_Size*5)).grid(
+                row=this_row, column=1, columnspan=5)
+            
+            for this_team in range(self.The_Game.number_teams):
+                tk.Entry(self, width=5, font=font_return(
+                    My_Font_Size*5), name='override'+str(this_team)).grid(row=this_row+1, column=this_team+1)
+
+            tk.Button(self, text='Correct Scores', command=correct, name='correct_button', font=font_return(
+                My_Font_Size*5)).grid(row=this_row+2, columnspan=5)
         super().__init__(*args, **kwargs)
 
         self.game_scores=None
@@ -134,7 +167,7 @@ class Check_Answers_dlg(tk.Frame):
         tk.Label(self, text='Check Answers',  font=font_return(
             My_Font_Size*5)).grid(row=this_row, column=1, columnspan=5)
 
-
+        this_row += 1
         tk.Label(self, width=15, text='Team', padx=15, font=font_return(
             My_Font_Size*3)).grid(row=this_row, column=1)
         tk.Label(self, width=15, text='Score', padx=15, font=font_return(
@@ -179,11 +212,16 @@ class Check_Answers_dlg(tk.Frame):
         this_row += 1
         tk.Button(self, text='Go',  font=font_return(
             My_Font_Size*5), command=go).grid(row=this_row, column=1, columnspan=2)
+        tk.Button(self, text='Override Score',  font=font_return(
+            My_Font_Size*5), command=override).grid(row=this_row, column=3, columnspan=1)
         tk.Button(self, text='Done',  font=font_return(
             My_Font_Size*5), command=done).grid(row=this_row, column=4, columnspan=2)
     
+        this_row += 1
+
     def set_scores(self, difficulty):
 
+       
         self.The_Game.calculate_scores(difficulty)
 
 

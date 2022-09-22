@@ -14,4 +14,6 @@ class one_question():
 
 
 def font_return(this_size):
-    return tkfont.Font(family="Times", size=this_size)
+
+    fonts = list(tkfont.families())
+    return tkfont.Font(family=fonts[198], size=this_size)

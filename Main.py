@@ -64,6 +64,10 @@ Display_Question_dlg(root, name='display_question').grid(
 
 Home_dlg_class(root, name='home_frame').grid(row=1, column=1, sticky='news')
 
+Game_Board_dlg_class(the_questions, The_Game, root, name='game_board_frame').grid(
+    row=1, column=1, sticky='news')
+
+Check_Answers_dlg(The_Game, root, name='check_answer').grid(row=1, column=1, sticky='news')
 root.nametowidget('home_frame').tkraise()
 
 root.mainloop()
