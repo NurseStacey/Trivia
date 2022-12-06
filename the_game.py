@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from numpy import append
-
 @dataclass
 class One_Team_Class():
     score:int

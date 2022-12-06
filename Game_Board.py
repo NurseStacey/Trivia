@@ -73,9 +73,13 @@ class Game_Board_dlg_class(tk.Frame):
 
     def get_the_subject_names(self, the_questions):
 
-        for one_question in the_questions:
-            if not(one_question.subject in self.the_subjects):
-                self.the_subjects.append(one_question.subject)
+        self.the_subjects =[*set([x.subject for x in the_questions])]
+        
+        # for one_question in the_questions:
+        #     if not(one_question.subject in self.the_subjects):
+        #         self.the_subjects.append(one_question.subject)
+        
+        pass
 
 class Check_Answers_dlg(tk.Frame):
     def __init__(self, The_Game, *args, **kwargs):

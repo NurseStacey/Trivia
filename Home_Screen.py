@@ -27,7 +27,7 @@ class Home_dlg_class(tk.Frame):
 
         this_row = 0
         
-        tk.Label(self, borderwidth=1, relief="solid", text='Life is Not Fair\n(so suck it up buttercup)', font=font_return(
+        tk.Label(self, borderwidth=1, relief="solid", text='Stacey''s Fun Time\nTrivia Game', font=font_return(
             My_Font_Size*8)).grid(row=this_row, column=1, columnspan=3)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
